@@ -8,7 +8,7 @@ from pyhocon import ConfigFactory
 from dichotomail.rules.inbox import load_headfunction
 
 imap4_client = {'host': 'imap.ionos.com', 'port': '993',
-				'user': 'pr@rapplean.net', 'pass': r'QAMj9eTD1?OTz222A6Zq9gy' # r'E&jmgN%oju31ai28'
+				'user': 'pr@rapplean.net', 'pass': r'naistrai'
                 }
 
 class EmailData:
