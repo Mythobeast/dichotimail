@@ -5,7 +5,7 @@ from imaplib import IMAP4_SSL
 
 from pyhocon import ConfigFactory
 
-from mailtree.rules.inbox import bld_inboxhead
+from dichotomail.rules.inbox import load_headfunction
 
 imap4_client = {'host': 'imap.ionos.com', 'port': '993',
 				'user': 'pr@rapplean.net', 'pass': r'QAMj9eTD1?OTz222A6Zq9gy' # r'E&jmgN%oju31ai28'
@@ -21,16 +21,19 @@ class EmailData:
 def main():
 	context = ConfigFactory.parse_file(sys.argv[1])
 
-	inboxnode = bld_inboxhead(context)
 	context.mc = IMAP4_SSL(imap4_client['host'], imap4_client['port'])
 	context.mc.login(imap4_client['user'], imap4_client['pass'])
+
+	for folder in context.folderlist:
+		process_folder(context, folder)
+
+
 	# Logout and close the connection
-	process_folder(context, 'INBOX', bld_inboxhead)
 	context.mc.logout()
 
 
-def process_folder(context, mailbox, headfunction):
-	headnode = headfunction(context)
+def process_folder(context, headfunction):
+	headnode = load_headfunction(context, folder)
 	status, rowcountlist = context.mc.select(mailbox=mailbox, readonly=False)
 	if rowcountlist[0] == 0:
 		return
